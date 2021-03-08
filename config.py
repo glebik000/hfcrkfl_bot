@@ -1,1 +1,0 @@
-BOT_TOKEN = "1116833651:AAHsB16Ngxt424MZg8Y8uMkbuGp_qNNBf78" #token hfcrkfl_bot got from FatherBot
