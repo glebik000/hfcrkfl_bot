@@ -5,6 +5,7 @@ import content_messages
 bot = telebot.TeleBot(config.BOT_TOKEN)
 chat_id = 0
 count = 0
+links = ""
 
 def counter():
     global count
@@ -14,11 +15,22 @@ def counter():
 def pidorCheck(message):
     msg = message.text
     if ("пидор" in msg.lower()):
-        #bot.reply_to_message(message.chat.id, message.id,"Сам пидор")
         bot.send_message(message.chat.id, "@"+str(message.from_user.username)+", cам пидор", reply_to_message_id = message.id)
     else:
-        #bot.send_message(message.chat.id, message.text)
         print(message.text)
+
+
+def pizdaCheck(message):
+    msg = message.text
+    if ("да" in msg.lower()):
+        bot.send_message(message.chat.id, "ПИЗДА", reply_to_message_id = message.id)
+    else:
+        print(message.text)
+
+def triggerCheck(message):
+    pidorCheck(message)
+    pizdaCheck(message)
+
 
 @bot.message_handler(commands=['start'])
 def welcome(message):
@@ -32,6 +44,11 @@ def help(message):
     bot.send_message(message.chat.id,
                      content_messages.HELP_TEXT)
 
+@bot.message_handler(commands=['pleh'])
+def pleh(message):
+    bot.send_message(message.chat.id,
+                     "PLEH COMING SOON...")
+
 @bot.message_handler(commands=['howmuchmessages'])
 def countmsgs(message):
 
@@ -42,7 +59,8 @@ def countmsgs(message):
 @bot.message_handler(content_types=['text'])
 def forwarding(message):
     print(message)
-    pidorCheck(message)
+    triggerCheck(message)
+
     print(message.chat.id)
 
 print("Bot was started, waiting for a dialog")
