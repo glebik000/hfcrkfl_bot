@@ -66,11 +66,17 @@ def pleh(message):
 
 @bot.message_handler(commands=['switch'])
 def switch(message):
-    bot.send_message(
-        message.chat.id,
-        switchText(message.reply_to_message.text),
-        reply_to_message_id=message.reply_to_message.id
-    )
+    if message.reply_to_message:
+        bot.send_message(
+            message.chat.id,
+            switchText(message.reply_to_message.text),
+            reply_to_message_id=message.reply_to_message.id
+        )
+    else:
+        bot.send_message(
+            message.chat.id, "Please reply on the text message.", reply_to_message_id=message.id
+        )
+
 
 
 @bot.message_handler(commands=['howmuchmessages'])
