@@ -1,11 +1,14 @@
 import telebot
 import config  # BOT_TOKEN token got from FatherBot
 import content_messages
+import re
 
 bot = telebot.TeleBot(config.BOT_TOKEN)
 chat_id = 0
 count = 0
 links = ""
+
+#fSticker = open("sources/F.webp", 'rb')
 
 
 def counter():
@@ -27,21 +30,40 @@ def pizdaCheck(message):
     msg = message.text
     if ("да" in msg.lower()):
         bot.send_message(message.chat.id, "ПИЗДА", reply_to_message_id=message.id)
-    else:
-        print(message.text)
+
+
+def fCheck(message):
+    msg = message.text
+    if ("f" == msg.lower()):
+        fSticker = open("sources/F.webp", 'rb')
+        if message.reply_to_message:
+            bot.send_sticker(
+                message.chat.id,
+                fSticker,
+                reply_to_message_id=message.reply_to_message.id
+            )
+        else:
+            bot.send_sticker(message.chat.id, fSticker)
 
 
 def switchText(text):
-    layout = dict(zip(map(ord, "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
-                               'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
-                      "йцукенгшщзхъфывапролджэячсмитьбю.ё"
-                      'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
-    return (text.translate(layout))
+    layout_to_rus = dict(zip(map(ord, "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
+                                      'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
+                             "йцукенгшщзхъфывапролджэячсмитьбю.ё"
+                             'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
+    if(re.search(r'[а-яА-ЯёЁ]', text)):
+        layout_to_eng = dict(zip(map(ord, "йцукенгшщзхъфывапролджэячсмитьбю.ё"
+                                          'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'),
+                                 "qwertyuiop[]asdfghjkl;'zxcvbnm,./`"
+                                 'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'))
+        return (text.translate(layout_to_eng))
+    return (text.translate(layout_to_rus))
 
 
 def triggerCheck(message):
     pidorCheck(message)
-    pizdaCheck(message)
+    #pizdaCheck(message)
+    fCheck(message)
 
 
 @bot.message_handler(commands=['start'])
@@ -76,7 +98,6 @@ def switch(message):
         bot.send_message(
             message.chat.id, "Please reply on the text message.", reply_to_message_id=message.id
         )
-
 
 
 @bot.message_handler(commands=['howmuchmessages'])
