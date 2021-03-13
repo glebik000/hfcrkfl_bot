@@ -28,13 +28,20 @@ def pidorCheck(message):
 
 def pizdaCheck(message):
     msg = message.text
-    if ("да" in msg.lower()):
+    if ("да" == msg.lower()):
         bot.send_message(message.chat.id, "ПИЗДА", reply_to_message_id=message.id)
+
+
+def noCheck(message):
+    msg = message.text
+    if ("нет" == msg.lower() or "нет." == msg.lower()):
+        bot.send_message(message.chat.id, "Пидора ответ",
+                         reply_to_message_id=message.id)
 
 
 def fCheck(message):
     msg = message.text
-    if ("f" == msg.lower()):
+    if ("f" == msg.lower()) or ("press f" == msg.lower()):
         fSticker = open("sources/F.webp", 'rb')
         if message.reply_to_message:
             bot.send_sticker(
@@ -64,6 +71,7 @@ def triggerCheck(message):
     pidorCheck(message)
     #pizdaCheck(message)
     fCheck(message)
+    noCheck(message)
 
 
 @bot.message_handler(commands=['start'])
