@@ -58,6 +58,7 @@ def switchText(text):
                                       'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~'),
                              "йцукенгшщзхъфывапролджэячсмитьбю.ё"
                              'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'))
+    text = str(text)
     if(re.search(r'[а-яА-ЯёЁ]', text)):
         layout_to_eng = dict(zip(map(ord, "йцукенгшщзхъфывапролджэячсмитьбю.ё"
                                           'ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,Ё'),
@@ -69,7 +70,7 @@ def switchText(text):
 
 def triggerCheck(message):
     pidorCheck(message)
-    #pizdaCheck(message)
+    pizdaCheck(message)
     fCheck(message)
     noCheck(message)
 
@@ -96,17 +97,29 @@ def pleh(message):
 
 @bot.message_handler(commands=['switch'])
 def switch(message):
-    if message.reply_to_message:
-        bot.send_message(
-            message.chat.id,
-            switchText(message.reply_to_message.text),
-            reply_to_message_id=message.reply_to_message.id
-        )
-    else:
-        bot.send_message(
-            message.chat.id, "Please reply on the text message.", reply_to_message_id=message.id
-        )
-
+    if message.reply_to_message.content_type == 'text':
+        if message.reply_to_message:
+            bot.send_message(
+                message.chat.id,
+                switchText(message.reply_to_message.text),
+                reply_to_message_id=message.reply_to_message.id
+            )
+        else:
+            bot.send_message(
+                message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
+            )
+    if message.reply_to_message.content_type != 'text':
+        if message.reply_to_message:
+            bot.send_message(
+                message.chat.id,
+                switchText(message.reply_to_message.caption),
+                reply_to_message_id=message.reply_to_message.id
+            )
+        else:
+            bot.send_message(
+                message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
+            )
+        print(message.reply_to_message.caption)
 
 @bot.message_handler(commands=['howmuchmessages'])
 def countmsgs(message):
@@ -121,6 +134,9 @@ def forwarding(message):
     triggerCheck(message)
     print(message.chat.id)
 
+@bot.message_handler(content_types=['photo'])
+def forwall(message):
+    print(str(message) + '\n' + 'ATTENTION!!! IMAGE ')
 
 print("Bot was started, waiting for a dialog")
 bot.polling(none_stop=True)
