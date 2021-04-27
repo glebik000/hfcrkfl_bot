@@ -72,30 +72,36 @@ def pleh(message):
 
 @bot.message_handler(commands=['switch'])
 def switch(message):
-    if message.reply_to_message.content_type == 'text':
-        if message.reply_to_message:
-            bot.send_message(
-                message.chat.id,
-                switchText(message.reply_to_message.text),
-                reply_to_message_id=message.reply_to_message.id
-            )
-        else:
-            bot.send_message(
-                message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
-            )
-    if message.reply_to_message.content_type != 'text':
-        if message.reply_to_message:
-            bot.send_message(
-                message.chat.id,
-                switchText(message.reply_to_message.caption),
-                reply_to_message_id=message.reply_to_message.id
-            )
-        else:
-            bot.send_message(
-                message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
-            )
-        print(message.reply_to_message.caption)
-
+    if message.reply_to_message is not None:
+        print (message.reply_to_message)
+        if message.reply_to_message.content_type == 'text':
+            if message.reply_to_message:
+                bot.send_message(
+                    message.chat.id,
+                    switchText(message.reply_to_message.text),
+                    reply_to_message_id=message.reply_to_message.id
+                )
+            else:
+                bot.send_message(
+                    message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
+                )
+    if message.reply_to_message is not None:
+        if message.reply_to_message.content_type != 'text':
+            if message.reply_to_message:
+                bot.send_message(
+                    message.chat.id,
+                    switchText(message.reply_to_message.caption),
+                    reply_to_message_id=message.reply_to_message.id
+                )
+            else:
+                bot.send_message(
+                    message.chat.id, "Please reply on the TEXT message.", reply_to_message_id=message.id
+                )
+            print(message.reply_to_message.caption)
+    if message.reply_to_message is None:
+        bot.send_message(
+            message.chat.id, "Please REPLY on the TEXT message.", reply_to_message_id=message.id
+        )
 
 @bot.message_handler(commands=['howmuchmessages'])
 def countmsgs(message):
